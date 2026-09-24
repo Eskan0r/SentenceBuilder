@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.utdallas.sentencebuilder.ui.ReportsController" spacing="10">
+    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Reports" styleClass="h1"/>
+        <Button text="Refresh" onAction="#refresh"/>
+    </HBox>
+    <GridPane fx:id="summary" hgap="24" vgap="4" styleClass="summary">
+        <Label text="Distinct words" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sDistinct" text="–" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Total words" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sTokens" text="–" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Sentences seen" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sSentences" text="–" GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Word pairs" GridPane.columnIndex="3" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sBigrams" text="–" GridPane.columnIndex="3" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Imports" GridPane.columnIndex="4" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sFiles" text="–" GridPane.columnIndex="4" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Generated" GridPane.columnIndex="5" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sGenerated" text="–" GridPane.columnIndex="5" GridPane.rowIndex="1" styleClass="stat"/>
+        <Label text="Distinct generated" GridPane.columnIndex="6" GridPane.rowIndex="0" styleClass="hint"/>
+        <Label fx:id="sDistinctGenerated" text="–" GridPane.columnIndex="6" GridPane.rowIndex="1" styleClass="stat"/>
+    </GridPane>
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="Generated sentences">
+            <VBox spacing="8">
+                <padding><Insets top="8" right="0" bottom="0" left="0"/></padding>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Containing"/>
+                    <TextField fx:id="sentenceFilter" prefColumnCount="18" promptText="any text"/>
+                    <CheckBox fx:id="duplicatesOnly" text="Duplicates only" onAction="#loadSentences"/>
+                    <Button text="Search" onAction="#loadSentences" defaultButton="true"/>
+                    <Label fx:id="sentenceCount" styleClass="hint"/>
+                </HBox>
+                <TableView fx:id="sentences" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSentence" text="Sentence" prefWidth="520"/>
+                        <TableColumn fx:id="colGenerator" text="Algorithm" prefWidth="130"/>
+                        <TableColumn fx:id="colStartWord" text="Start" prefWidth="90"/>
+                        <TableColumn fx:id="colRandom" text="Random start" prefWidth="90"/>
+                        <TableColumn fx:id="colTimes" text="Times" prefWidth="60"/>
+                        <TableColumn fx:id="colFedBack" text="Fed back" prefWidth="70"/>
+                        <TableColumn fx:id="colGeneratedAt" text="When" prefWidth="130"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="Sentence starters and enders">
+            <HBox spacing="12">
+                <padding><Insets top="8" right="0" bottom="0" left="0"/></padding>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Most common first words" styleClass="h2"/>
+                    <TableView fx:id="starters" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colStarterWord" text="Word" prefWidth="160"/>
+                            <TableColumn fx:id="colStarterCount" text="Starts" prefWidth="80"/>
+                            <TableColumn fx:id="colStarterPct" text="\% of its uses" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Most common last words" styleClass="h2"/>
+                    <TableView fx:id="enders" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEnderWord" text="Word" prefWidth="160"/>
+                            <TableColumn fx:id="colEnderCount" text="Ends" prefWidth="80"/>
+                            <TableColumn fx:id="colEnderPct" text="\% of its uses" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Never start a sentence (top 100 by frequency)" styleClass="h2"/>
+                    <TableView fx:id="neverStart" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colNeverWord" text="Word" prefWidth="160"/>
+                            <TableColumn fx:id="colNeverCount" text="Total" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+        </Tab>
+    </TabPane>
+</VBox>

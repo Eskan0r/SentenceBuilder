@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.utdallas.sentencebuilder.ui.WordsController" spacing="10">
+    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+    <Label text="Words" styleClass="h1"/>
+    <Label styleClass="hint" wrapText="true"
+           text="Browse and edit every word in the database. Double-click a count to change it. Select a word to see what follows it and what it follows; double-click a neighbour to jump to it."/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Filter"/>
+        <TextField fx:id="filter" prefColumnCount="14" promptText="prefix, or pattern with *"/>
+        <Label text="Min count"/>
+        <Spinner fx:id="minCount" prefWidth="80"/>
+        <Label text="Sort"/>
+        <ComboBox fx:id="sort" prefWidth="200"/>
+        <Label text="Limit"/>
+        <Spinner fx:id="limit" prefWidth="90"/>
+        <Button text="Search" onAction="#refresh" defaultButton="true" styleClass="primary"/>
+        <Label fx:id="countLabel" styleClass="hint"/>
+    </HBox>
+    <SplitPane dividerPositions="0.55" VBox.vgrow="ALWAYS">
+        <TableView fx:id="table" editable="true">
+            <columns>
+                <TableColumn fx:id="colText" text="Word" prefWidth="180"/>
+                <TableColumn fx:id="colTotal" text="Total" prefWidth="80"/>
+                <TableColumn fx:id="colStart" text="Starts" prefWidth="80"/>
+                <TableColumn fx:id="colEnd" text="Ends" prefWidth="80"/>
+                <TableColumn fx:id="colFollowers" text="Followers" prefWidth="80"/>
+            </columns>
+        </TableView>
+        <SplitPane orientation="VERTICAL" dividerPositions="0.5">
+            <VBox spacing="4">
+                <Label fx:id="followersLabel" text="Followed by" styleClass="h2"/>
+                <TableView fx:id="followers" editable="true" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colFNext" text="Next word" prefWidth="160"/>
+                        <TableColumn fx:id="colFCount" text="Count" prefWidth="80"/>
+                        <TableColumn fx:id="colFChosen" text="Chosen" prefWidth="80"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <VBox spacing="4">
+                <Label fx:id="predecessorsLabel" text="Comes after" styleClass="h2"/>
+                <TableView fx:id="predecessors" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colPPrev" text="Previous word" prefWidth="160"/>
+                        <TableColumn fx:id="colPCount" text="Count" prefWidth="80"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </SplitPane>
+</VBox>

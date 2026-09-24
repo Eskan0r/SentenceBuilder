@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.utdallas.sentencebuilder.ui.AutoCompleteController" spacing="10">
+    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+    <Label text="Auto-complete" styleClass="h1"/>
+    <Label styleClass="hint" wrapText="true"
+           text="Type a sentence. Each time you finish a word (space, comma or period) the list on the right shows the words that most often come next; double-click one or press Enter to insert it. Every word you type is added to the database, and each (previous word, next word) pair you use gets its counter bumped, so the model learns from you."/>
+    <SplitPane dividerPositions="0.62" VBox.vgrow="ALWAYS">
+        <VBox spacing="6">
+            <TextArea fx:id="editor" wrapText="true" promptText="Start typing…" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Button text="New text" onAction="#onNewText"/>
+                <Button text="Save session to import history" onAction="#onSaveSession"/>
+                <Label fx:id="sessionLabel" styleClass="hint"/>
+            </HBox>
+        </VBox>
+        <VBox spacing="6">
+            <Label fx:id="prevLabel" text="Words that start a sentence" styleClass="h2"/>
+            <ListView fx:id="suggestions" VBox.vgrow="ALWAYS"/>
+            <Button text="Insert selected word" onAction="#onInsert" maxWidth="Infinity"/>
+        </VBox>
+    </SplitPane>
+    <Label fx:id="status" text=""/>
+</VBox>

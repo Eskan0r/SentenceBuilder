@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.utdallas.sentencebuilder.ui.MainController">
+    <top>
+        <MenuBar>
+            <Menu text="Database">
+                <MenuItem text="Settings…" onAction="#onSettings"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit" onAction="#onExit"/>
+            </Menu>
+            <Menu text="Help">
+                <MenuItem text="About Sentence Builder" onAction="#onAbout"/>
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE">
+            <Tab fx:id="importTab" text="Import">
+                <fx:include fx:id="importView" source="import.fxml"/>
+            </Tab>
+            <Tab fx:id="generateTab" text="Generate">
+                <fx:include fx:id="generateView" source="generate.fxml"/>
+            </Tab>
+            <Tab fx:id="autoCompleteTab" text="Auto-complete">
+                <fx:include fx:id="autoCompleteView" source="autocomplete.fxml"/>
+            </Tab>
+            <Tab fx:id="wordsTab" text="Words">
+                <fx:include fx:id="wordsView" source="words.fxml"/>
+            </Tab>
+            <Tab fx:id="reportsTab" text="Reports">
+                <fx:include fx:id="reportsView" source="reports.fxml"/>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
