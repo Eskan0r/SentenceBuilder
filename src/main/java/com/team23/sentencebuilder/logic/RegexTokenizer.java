@@ -27,7 +27,10 @@ public class RegexTokenizer implements Tokenizer {
             "mr", "mrs", "ms", "dr", "st", "jr", "sr", "prof", "vs", "mt");
 
     private static final Pattern TOKEN = Pattern.compile(
-            "[\\p{L}\\p{N}]+(?:['\u2019\\-][\\p{L}\\p{N}]+)*|[.!?]+");
+        "\\p{N}+(?:[:.,]\\p{N}+)+" // numbers (so time like 1:15, 3.5, 1,000
+            + "|[\\p{L}\\p{N}]+(?:['\u2019\\-][\\p{L}\\p{N}]+)*" // words
+            + "|[.!?]+" // sentence terminators
+    );
 
     private static final Pattern PARAGRAPH_BREAK = Pattern.compile("\\R\\s*\\R");
 
