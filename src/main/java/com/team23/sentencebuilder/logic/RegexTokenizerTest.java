@@ -50,6 +50,18 @@ public class RegexTokenizerTest {
         assertEquals(List.of(List.of("line", "one", "line", "two")), tokenized);
     }
 
+    @Test
+    public void decimalsAndGroupedNumbersStayWhole() {
+        assertEquals(List.of("it", "costs", "3.5", "or", "1,000"),
+                tokenizer.tokenize("It costs 3.5 or 1,000.").get(0));
+    }
+
+    @Test
+    public void sentenceFinalNumberStillEndsSentence() {
+        assertEquals(List.of(List.of("in", "1815"), List.of("he", "left")),
+                tokenizer.tokenize("In 1815. He left."));
+    }
+
     // paragraph breaks (and Gutenberg Headings)
 
     @Test
