@@ -89,7 +89,7 @@ public class RegexTokenizer implements Tokenizer {
                     current = new ArrayList<>();
                 }
             } else {
-                current.add(token);
+                current.add(normalize(token));
             }
         }
 
