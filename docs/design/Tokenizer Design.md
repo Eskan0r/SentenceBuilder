@@ -127,7 +127,7 @@ JUnit 5, written against the `Tokenizer` interface where possible:
 - configuration: custom abbreviations, case-insensitive abbreviations, invalid patterns, null input;
 - one test documents a known limitation (trailing apostrophe) so changing the behavior later is a deliberate decision.
 
-## 10. References
+## 8. References
 - Jurafsky, D., and Martin, J. H. Speech and Language Processing (3rd ed. draft), Chapter 2,
   text normalization and tokenization, and Chapter 3, N-gram Language Models.
   https://web.stanford.edu/~jurafsky/slp3/
