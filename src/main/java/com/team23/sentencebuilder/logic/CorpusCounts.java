@@ -18,15 +18,20 @@ import java.util.Map;
  * (Jurafsky and Martin) where like the {@code NGramWindower} algorithm, it also mentioned on how to actually
  * count the words and write out the probability distributions for this.
  *
+ * <p>
+ *
  * Limitation: the counts here are unsmoothed, where a word pair that never occurred
  * in the imported text just gets no entry (or a probability of zero). This means callers
  * should handle a word without followers. Smoothing is not implemented here because with a
  * large corpus of text from Gutenberg, it would move most probability onto pairs that never
  * occurred; therefore, this is an accepted tradeoff.
- * 
+ *
+ * @author Alen Jo
  */
 public class CorpusCounts {
     private static final int BIGRAM_ORDER = 2;
+    private static final int SINGLE_OCCURRENCE = 1;
+
     private final NGramWindower ngramWindower = new NGramWindower(BIGRAM_ORDER);
 
     // previous word (or START) -> next word (or END) -> times seen
@@ -38,7 +43,7 @@ public class CorpusCounts {
     private int wordCount;
 
     /**
-     * Counts one whole text (whether it'd be imported, generated, or typed) and ignores
+     * Counts a sentence (whether it'd be imported, generated, or typed) and ignores
      * empty sentences
      *
      * @param words - normalized words of a sentence in order
@@ -65,7 +70,7 @@ public class CorpusCounts {
 
     /**
      * Counts that the user chose nextWord right after previousWord, which
-     * is same as {@code addTransition};
+     * is same as {@code addTransition}
      *
      * @param previousWord - the word before
      * @param nextWord - word chosen or typed
@@ -162,13 +167,7 @@ public class CorpusCounts {
      */
     private void addCount(String previousWord, String nextWord)
     {
-        transitionCounts.computeIfAbsent(previousWord, k -> new HashMap<>())
-                .merge(nextWord, 1, Integer::sum);
-
-        if (!nextWord.equals(Boundary.END)) {
-            totalCounts.merge(nextWord, 1, Integer::sum);
-            wordCount++;
-        }
+        addCount(previousWord, nextWord, SINGLE_OCCURRENCE);
     }
 
     /**
@@ -181,7 +180,7 @@ public class CorpusCounts {
      * @param occurrences - occurrences of the nextWord
      */
     private void addCount(String previousWord, String nextWord, int occurrences) {
-        transitionCounts.computeIfAbsent(previousWord, k -> new HashMap<>())
+        transitionCounts.computeIfAbsent(previousWord, unusedKey -> new HashMap<>())
                 .merge(nextWord, occurrences, Integer::sum);
 
         if (!nextWord.equals(Boundary.END)) {

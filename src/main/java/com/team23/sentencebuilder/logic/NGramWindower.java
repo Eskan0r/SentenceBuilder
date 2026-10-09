@@ -10,7 +10,7 @@ import java.util.List;
  * to a large list.
  *
  * The inspiration behind the NGramWindower idea came from: <a href="https://web.stanford.edu/~jurafsky/slp3/">Speech and Language Processing</a>
- * (Jurafsky and Martin) where one of the chapters lectures mentioned how language models are predictive distributions of words
+ * (Jurafsky and Martin) where chapter three lecture mentioned how language models are predictive distributions of words
  * that have likelihood of words coming based off simple attributes like start words, end words, or even
  * successor words in a sentence.
  *
