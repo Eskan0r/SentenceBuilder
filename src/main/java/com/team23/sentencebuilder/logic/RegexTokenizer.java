@@ -37,6 +37,7 @@ public class RegexTokenizer implements Tokenizer {
 
     private static final List<String> DEFAULT_PATTERNS = List.of(
             "\\p{N}+(?:[:.,]\\p{N}+)+", // numbers: 1:15, 3.5, 1,000
+            "(?<![\\p{L}\\p{N}])(?:\\p{L}\\.){2,}", // dotted abbreviations: e.g., U.S., a.m.
             "[\\p{L}\\p{N}]+(?:['\u2019\\-][\\p{L}\\p{N}]+)*", // words
             "[.!?]+" // sentence-ending punctuation
     );

@@ -177,14 +177,29 @@ public class RegexTokenizerTest {
     }
 
     @Test
-    public void dottedAbbreviationsAreSplitIntoFragments() {
+    public void dottedAbbreviationsStayWhole() {
         assertEquals(
-                List.of(List.of("we", "like", "fruit", "e"), List.of("g"), List.of("apples")),
+                List.of(List.of("we", "like", "fruit", "e.g.", "apples")),
                 tokenizer.tokenize("We like fruit, e.g. apples."));
 
         assertEquals(
-                List.of(List.of("the", "u"), List.of("s"), List.of("is", "big")),
+                List.of(List.of("the", "u.s.", "is", "big")),
                 tokenizer.tokenize("The U.S. is big."));
+    }
+
+    @Test
+    public void timeAbbreviationsStayWhole() {
+        assertEquals(
+                List.of(List.of("meet", "at", "5", "a.m.", "sharp")),
+                tokenizer.tokenize("Meet at 5 a.m. sharp."));
+    }
+
+    @Test
+    public void sentenceEndingInDottedAbbreviationRunsIntoNext() {
+        // known tradeoff made, where the abbreviation's period is part of the token, so it can't also end the sentence
+        assertEquals(
+                List.of(List.of("i", "live", "in", "the", "u.s.", "he", "left")),
+                tokenizer.tokenize("I live in the U.S. He left."));
     }
 
     @Test
