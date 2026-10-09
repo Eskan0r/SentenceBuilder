@@ -3,6 +3,14 @@ package com.team23.sentencebuilder.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Turns a sentence into transitions to which an order of two gives us bigrams (one word of
+ * context) and an order of three gives us trigrams (two words). Here, sentence pads with
+ * start and end markers to help mark where did a sentence begin and end as we flatten this
+ * to a large list.
+ *
+ * @author Alen Jo
+ */
 public class NGramWindower {
     private static final int MINIMUM_ORDER = 2;
     private final int order;
@@ -21,6 +29,12 @@ public class NGramWindower {
         this.order = order;
     }
 
+    /**
+     * Builds the transitions for a sentence
+     *
+     * @param sentence - normalized words, in order
+     * @return - one transition per word, plus one for the end marker
+     */
     public List<Transition> transitions(List<String> sentence)
     {
         List<String> padded = new ArrayList<>();
@@ -32,8 +46,7 @@ public class NGramWindower {
         padded.addAll(sentence);
         padded.add(Boundary.END);
 
-        // window slide across padded sentence with each iteration a predicted word from (order - 1) words
-        // before it
+        // window slide across padded sentence with each iteration a predicted word from (order - 1) words before it
         List<Transition> wordTransitions = new ArrayList<>();
 
         for (int ixNext = order - 1; ixNext < padded.size(); ixNext++) {
