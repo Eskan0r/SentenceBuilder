@@ -1,12 +1,14 @@
 package com.team23.sentencebuilder.logic;
 
 import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegexTokenizerTest {
     private final Tokenizer tokenizer = new RegexTokenizer();
@@ -167,5 +169,158 @@ public class RegexTokenizerTest {
     public void customListReplacesDefaultsRatherThanAddingToThem() {
         var custom = new RegexTokenizer(Set.of("etc"));
         assertEquals(2, custom.tokenize("Mr. Darcy left.").size()); // "mr" is no longer an abbreviation, so abrupt end to sentence
+    }
+
+    @Test
+    public void abbreviationAtVeryEndOfInputIsKept() {
+        assertEquals(List.of(List.of("ask", "dr")), tokenizer.tokenize("Ask Dr."));
+    }
+
+    @Test
+    public void dottedAbbreviationsAreSplitIntoFragments() {
+        assertEquals(
+                List.of(List.of("we", "like", "fruit", "e"), List.of("g"), List.of("apples")),
+                tokenizer.tokenize("We like fruit, e.g. apples."));
+
+        assertEquals(
+                List.of(List.of("the", "u"), List.of("s"), List.of("is", "big")),
+                tokenizer.tokenize("The U.S. is big."));
+    }
+
+    @Test
+    public void abbreviationAloneIsKept() {
+        assertEquals(List.of(List.of("dr")), tokenizer.tokenize("Dr."));
+    }
+
+    // edge cases for tokenizer
+
+    @Test
+    public void ellipsisAfterAbbreviationStillEndsSentence() {
+        assertEquals(List.of(List.of("dr"), List.of("what")), tokenizer.tokenize("Dr... what"));
+    }
+
+    @Test
+    public void abbreviationBeforeParagraphBreakStillEndsSentence() {
+        assertEquals(2, tokenizer.tokenize("Ask Dr.\n\nHello there.").size());
+    }
+
+    // regex builder tests
+    // ---- builder ----
+
+    @Test
+    public void builderWithDefaultsBehavesLikeDefaultConstructor() {
+        var built = RegexTokenizer.builder().build();
+        var text = "Prof. Cole meets us at 1:15 PM. Must be there.";
+        assertEquals(tokenizer.tokenize(text), built.tokenize(text));
+    }
+
+    @Test
+    public void appendPatternAddsNewTokenType() {
+        var custom = RegexTokenizer.builder().appendPattern("#\\w+").build();
+        assertEquals(List.of(List.of("love", "#java", "now")),
+                custom.tokenize("Love #java now."));
+    }
+
+    @Test
+    public void appendedPatternsHaveLowerPriorityThanDefaults() {
+        // the default word pattern matches "me" first, so the email pattern never wins
+        var custom = RegexTokenizer.builder().appendPattern("[a-z]+@[a-z]+").build();
+        assertEquals(List.of(List.of("me", "site")), custom.tokenize("me@site"));
+    }
+
+    @Test
+    public void customPatternsReplaceDefaults() {
+        var custom = RegexTokenizer.builder()
+                .customPatterns(List.of("[a-z]+", "[.]"))
+                .build();
+        // digits no longer match anything, so "123" is dropped
+        assertEquals(List.of(List.of("abc"), List.of("def")), custom.tokenize("abc 123. def"));
+    }
+
+    @Test
+    public void appendPatternExtendsCustomSet() {
+        var custom = RegexTokenizer.builder()
+                .customPatterns(List.of("[a-z]+"))
+                .appendPattern("[.]")
+                .build();
+        assertEquals(List.of(List.of("hi"), List.of("there")), custom.tokenize("hi. there"));
+    }
+
+    @Test
+    public void withoutAnEndPunctuationPatternEverythingIsOneSentence() {
+        var custom = RegexTokenizer.builder().customPatterns(List.of("[a-z]+")).build();
+        assertEquals(List.of(List.of("hello", "world")), custom.tokenize("hello. world"));
+    }
+
+    @Test
+    public void builderAbbreviationsReplaceDefaults() {
+        var custom = RegexTokenizer.builder().abbreviations(Set.of("etc")).build();
+        assertEquals(1, custom.tokenize("Apples etc. are fine.").size());
+        assertEquals(2, custom.tokenize("Mr. Darcy left.").size());
+    }
+
+    @Test
+    public void abbreviationsAreCaseInsensitive() {
+        var custom = RegexTokenizer.builder().abbreviations(Set.of("Etc")).build();
+        assertEquals(1, custom.tokenize("Apples etc. are fine.").size());
+    }
+
+    @Test
+    public void patternThatCanMatchEmptyStringDoesNotCrash() {
+        var custom = RegexTokenizer.builder()
+                .customPatterns(List.of("[a-z]+", "x*"))
+                .build();
+        assertEquals(List.of(List.of("hi", "there")), custom.tokenize("hi there"));
+    }
+
+    // invalid regex patterns
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {
+        "   ", // blank
+        "(", // unclosed group
+        "[a-z", // unclosed character class
+        "*abc", // dangling metacharacter
+        "a{2,1}", // illegal repetition range
+        "\\" // trailing backslash
+    })
+    public void invalidPatternsAreRejected(String regex) {
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().appendPattern(regex).build());
+    }
+
+    @Test
+    public void overlongPatternIsRejected() {
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().appendPattern("a".repeat(201)).build());
+    }
+
+    // regex validation
+    @Test
+    public void invalidRegexIsRejected() {
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().appendPattern("(").build());
+    }
+
+    @Test
+    public void overlongOrBlankPatternIsRejected() {
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().appendPattern("a".repeat(201)).build());
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().appendPattern("   ").build());
+    }
+
+    @Test
+    public void emptyPatternListIsRejected() {
+        assertThrows(IllegalArgumentException.class,
+                () -> RegexTokenizer.builder().customPatterns(List.of()).build());
+    }
+
+    @Test
+    public void nullArgumentsAreRejected() {
+        assertThrows(IllegalArgumentException.class, () -> RegexTokenizer.builder().appendPattern(null));
+        assertThrows(IllegalArgumentException.class, () -> RegexTokenizer.builder().customPatterns(null));
+        assertThrows(IllegalArgumentException.class, () -> RegexTokenizer.builder().abbreviations(null));
+        assertThrows(NullPointerException.class, () -> tokenizer.tokenize(null));
     }
 }
