@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 /**
  * An in-memory bigram counter which then has things stored as transitions:
  * previous word -> next word -> count. Boundary.START and Boundary.END stand
@@ -14,8 +15,15 @@ import java.util.Map;
  * count equals the sum of its outgoing counts.
  * <p>
  * The inspiration behind the CorpusCounts came from: <a href="https://web.stanford.edu/~jurafsky/slp3/">Speech and Language Processing</a>
- * (Jurafsky and Martin) where like the NGramWindower algorithm, it also mentioned on how to actually
+ * (Jurafsky and Martin) where like the {@code NGramWindower} algorithm, it also mentioned on how to actually
  * count the words and write out the probability distributions for this.
+ *
+ * Limitation: the counts here are smoothed, where a word pair that never occurred
+ * in the imported text just gets no entry (or a probability of zero). This means callers
+ * should handle a word without followers. Smoothing is not implemented here because with a
+ * large corpus of text from Gutenberg, it would move most probability onto pairs that never
+ * occurred; therefore, this is an accepted tradeoff.
+ * 
  */
 public class CorpusCounts {
     private static final int BIGRAM_ORDER = 2;

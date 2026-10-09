@@ -104,4 +104,22 @@ public class CorpusCounterTest {
         assertEquals(2, first.getStarts().get("a"));
         assertEquals(4, first.getWordCount());
     }
+
+    // Note: this is from ch. 3 of Stanford Speech and Language Processing by Jurafsky and Martin for their work
+    @Test
+    public void matchesStanfordNGramWindowerIAmSamExample() {
+        CorpusCounts counts = new CorpusCounts();
+        counts.addSentence(List.of("i", "am", "sam"));
+        counts.addSentence(List.of("sam", "i", "am"));
+        counts.addSentence(List.of("i", "do", "not", "like", "green", "eggs", "and", "ham"));
+
+        assertEquals(3, counts.getTotal().get("i"));
+        assertEquals(2, counts.getStarts().get("i")); // P(i | <s>) = 2/3
+        assertEquals(1, counts.getStarts().get("sam")); // P(sam | <s>) = 1/3
+        assertEquals(2, counts.getFollows().get("i").get("am")); // P(am | i) = 2/3
+        assertEquals(1, counts.getFollows().get("i").get("do")); // P(do | i) = 1/3
+        assertEquals(2, counts.getTotal().get("sam"));
+        assertEquals(1, counts.getEnds().get("sam")); // P(</s> | sam) = 1/2
+        assertEquals(1, counts.getFollows().get("am").get("sam")); // P(sam | am) = 1/2
+    }
 }
