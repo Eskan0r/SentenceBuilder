@@ -5,6 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * An in-memory bigram counter which then has things stored as transitions:
+ * previous word -> next word -> count. Boundary.START and Boundary.END stand
+ * in for sentence starts and ends, so start counts, end counts, and follow counts
+ * are all the same kind of fact. That also guarantees that every word's total
+ * count equals the sum of its outgoing counts.
+ * <p>
+ * The inspiration behind the CorpusCounts came from: <a href="https://web.stanford.edu/~jurafsky/slp3/">Speech and Language Processing</a>
+ * (Jurafsky and Martin) where like the NGramWindower algorithm, it also mentioned on how to actually
+ * count the words and write out the probability distributions for this.
+ */
 public class CorpusCounts {
     private static final int BIGRAM_ORDER = 2;
     private final NGramWindower ngramWindower = new NGramWindower(BIGRAM_ORDER);
