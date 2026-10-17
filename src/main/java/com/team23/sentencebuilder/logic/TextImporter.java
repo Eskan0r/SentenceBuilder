@@ -2,6 +2,19 @@ package com.team23.sentencebuilder.logic;
 
 import java.util.function.DoubleConsumer;
 
+/**
+ * Turns a block of raw text into {@link CorpusCounts}.
+ * <p>
+ * Implementations report progress through a plain {@link DoubleConsumer}, so
+ * they have no knowledge of any UI toolkit, and they do not persist anything.
+ * <p>
+ *
+ * Progress represents values between 0.0 and 1.0 and is in monotonically increasing fashion.
+ * Last value represents {@link #PROGRESS_COMPLETE}. Empty or punctuation-only
+ * text is valid to which it yields empty counts and reports 1.0.
+ *
+ * @author Alen Jo
+ */
 public interface TextImporter {
     double PROGRESS_COMPLETE = 1.0;
 
