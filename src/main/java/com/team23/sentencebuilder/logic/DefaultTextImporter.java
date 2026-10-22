@@ -15,6 +15,7 @@ import java.util.function.DoubleConsumer;
  * @author Alen Jo
  */
 public class DefaultTextImporter implements TextImporter {
+    static final int PROGRESS_INTERVAL = 500; // sentences processed between intervals
     private final Tokenizer tokenizer;
 
     /**
@@ -42,12 +43,18 @@ public class DefaultTextImporter implements TextImporter {
         Objects.requireNonNull(progress, "progress must not be null");
 
         List<List<String>> sentences = tokenizer.tokenize(text);
+        int totalSentences = sentences.size();
         CorpusCounts corpusCounts = new CorpusCounts();
 
-        for (List<String> sentence : sentences) {
-            corpusCounts.addSentence(sentence);
-        }
+        for (int ixSentence = 0; ixSentence < totalSentences; ixSentence++) {
+            corpusCounts.addSentence(sentences.get(ixSentence));
 
+            int processed = ixSentence + 1;
+            if (processed % PROGRESS_INTERVAL == 0 && processed < totalSentences) {
+                progress.accept((double) processed / totalSentences);
+            }
+        }
+        
         progress.accept(PROGRESS_COMPLETE);
         return corpusCounts;
     }
