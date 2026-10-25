@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            prefHeight="740.0" prefWidth="1180.0">
+  <center>
+    <TabPane tabClosingPolicy="UNAVAILABLE">
+      <Tab text="Import Text">
+        <fx:include source="import-tab.fxml"/>
+      </Tab>
+      <Tab text="Generate Sentence">
+        <content>
+          <StackPane>
+            <Label text="Generate Sentence is not implemented yet." textFill="#8A8A8A"/>
+          </StackPane>
+        </content>
+      </Tab>
+      <Tab text="Batch Generate">
+        <content>
+          <StackPane>
+            <Label text="Batch Generate is not implemented yet." textFill="#8A8A8A"/>
+          </StackPane>
+        </content>
+      </Tab>
+      <Tab text="Auto-Complete">
+        <content>
+          <StackPane>
+            <Label text="Auto-Complete is not implemented yet." textFill="#8A8A8A"/>
+          </StackPane>
+        </content>
+      </Tab>
+      <Tab text="Words &amp; Reports">
+        <content>
+          <StackPane>
+            <Label text="Words &amp; Reports is not implemented yet." textFill="#8A8A8A"/>
+          </StackPane>
+        </content>
+      </Tab>
+      <Tab text="Sentence History">
+        <content>
+          <StackPane>
+            <Label text="Sentence History is not implemented yet." textFill="#8A8A8A"/>
+          </StackPane>
+        </content>
+      </Tab>
+    </TabPane>
+  </center>
+  <bottom>
+    <HBox alignment="CENTER_LEFT">
+      <padding>
+        <Insets bottom="6.0" left="12.0" right="12.0" top="4.0"/>
+      </padding>
+      <Label text="Sentence Builder - CS4485 Senior Design, Team 23. Data is kept in memory only." textFill="#777777"/>
+    </HBox>
+  </bottom>
+</BorderPane>

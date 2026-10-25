@@ -63,7 +63,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-          <mainClass>com.team23.sentencebuilder.HelloApplication</mainClass>
+          <mainClass>com.team23.sentencebuilder.SentenceBuilderApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
