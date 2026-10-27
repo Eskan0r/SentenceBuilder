@@ -5,6 +5,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DB {
 
@@ -16,17 +17,19 @@ public class DB {
     public static final String dbName = env.get("DB_NAME");
     public static final String password = env.get("DB_PASSWORD");
 
-    public static final String URL = "jdbc:mysql://" + host + ":" + port + "/" + dbName;
+    public static final String URL = "jdbc:mysql://" + host + ":" + port + "/" + dbName + "?allowMultiQueries=true";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, user, password);
     }
 
     public static void main(String[] args) {
-        try (Connection conn = getConnection()) {
-            System.out.println("Connected: " + conn.getMetaData().getURL());
+        try (Connection conn = getConnection();
+             Statement statement = conn.createStatement()) {
+             statement.execute(SQLTables.DDLScript);
+             System.out.println("Tables created");
         } catch (SQLException e) {
-            System.out.println("Connection failed: " + e.getMessage());
+            System.out.println("Database error: " + e.getMessage());
         }
     }
 }
