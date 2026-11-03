@@ -36,6 +36,12 @@
       <artifactId>mysql-connector-j</artifactId>
       <version>${mysql.version}</version>
     </dependency>
+    <!-- ENV variables loaded -->
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>3.0.2</version>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
